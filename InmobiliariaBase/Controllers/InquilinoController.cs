@@ -72,8 +72,9 @@ namespace InmobiliariaBase.Controllers
                 inquilino.Nombre = collection["Nombre"];
                 inquilino.Apellido = collection["Apellido"];
                 inquilino.Dni = collection["Dni"];
-                inquilino.Email = collection["Email"];
                 inquilino.Telefono = collection["Telefono"];
+                inquilino.Email = collection["Email"];
+                
                 repositorioInquilino.Modificar(inquilino);
                 TempData["Mensaje"] = "Datos guardados correctamente";
 

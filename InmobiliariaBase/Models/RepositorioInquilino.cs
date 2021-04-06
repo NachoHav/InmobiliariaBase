@@ -110,8 +110,10 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Inquilinos SET Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email" +
+                string sql = $"UPDATE Inquilinos SET" + " Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
                     $"WHERE Id = @id";
+
+
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -124,6 +126,7 @@ namespace InmobiliariaBase.Models
                     connection.Open();
                     res = command.ExecuteNonQuery();
                     connection.Close();
+
                 }
             }
             return res;
