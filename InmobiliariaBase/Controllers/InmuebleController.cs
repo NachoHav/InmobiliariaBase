@@ -46,10 +46,8 @@ namespace InmobiliariaBase.Controllers
         {
             try
             {
-                repositorioInmueble.Alta(inmueble);
-                TempData["Id"] = inmueble.Id;
-                return RedirectToAction(nameof(Index));
-                
+                repositorioInmueble.Alta(inmueble);                
+                return RedirectToAction(nameof(Index));                
             }
             catch
             {
@@ -58,36 +56,43 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: InmuebleController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Editar(int id)
         {
-            return View();
+            var inmueble = repositorioInmueble.ObtenerInmueble(id);
+            return View(inmueble);
         }
 
         // POST: InmuebleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Editar(int id, Inmueble inm)
         {
             try
             {
+                inm.Id = id;
+
+                repositorioInmueble.Modificar(inm);
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+
+                return View(inm);
             }
         }
 
         // GET: InmuebleController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Eliminar(int id)
         {
-            return View();
+            repositorioInmueble.Baja(id);
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: InmuebleController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Eliminar(int id, IFormCollection collection)
         {
             try
             {

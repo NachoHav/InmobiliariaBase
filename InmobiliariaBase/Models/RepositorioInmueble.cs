@@ -96,9 +96,9 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT Id, Direccion, Ambientes, Superficie, Latitud, Longitud, PropietarioId, p.Nombre, p.Apellido, " +
-                    $" FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.IdPropietario" +
-                    $" WHERE Id = @id";
+                string sql = $"SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, PropietarioId, p.Nombre, p.Apellido " +
+                    $" FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id" +
+                    $" WHERE i.Id = @id";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -137,7 +137,7 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Inmuebles SET" + "Direccion=@direccion, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud, PropietarioId=@propietarioId " +
+                string sql = $"UPDATE Inmuebles SET " + "Direccion=@direccion, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud, PropietarioId=@propietarioId " +
                     "WHERE Id = @id";
 
 
