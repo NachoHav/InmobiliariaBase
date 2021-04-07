@@ -13,8 +13,10 @@ namespace InmobiliariaBase.Models
         public string Apellido { get; set; }
         public string Dni { get; set; }
         public string Telefono { get; set; }
+
         [Required, EmailAddress]
         public string Email { get; set; }
+
         [DataType(DataType.Password)]
         public string Clave { get; set; } 
     }

@@ -13,12 +13,12 @@ namespace InmobiliariaBase.Controllers
     public class PropietarioController : Controller
     {
         private readonly RepositorioPropietario repositorioPropietario;
-        private readonly IConfiguration config;
+        private readonly IConfiguration configuration;
 
-        public PropietarioController(IConfiguration config)
+        public PropietarioController(IConfiguration configuration)
         {
-            repositorioPropietario = new RepositorioPropietario();
-            this.config = config;
+            repositorioPropietario = new RepositorioPropietario(configuration);
+            this.configuration = configuration;
         }
         // GET: PropietarioController
         public ActionResult Index()

@@ -1,6 +1,7 @@
 ﻿using InmobiliariaBase.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,17 @@ namespace InmobiliariaBase.Controllers
     public class InquilinoController : Controller
     {
         private readonly RepositorioInquilino repositorioInquilino;
+        private readonly IConfiguration configuration;
 
-        public InquilinoController()
+        public InquilinoController(IConfiguration configuration)
         {
-            repositorioInquilino = new RepositorioInquilino();
+            repositorioInquilino = new RepositorioInquilino(configuration);
+            this.configuration = configuration;
         }
         // GET: InquilinoController
         public ActionResult Index()
         {
-            var lista = repositorioInquilino.Obtener();
+            var lista = repositorioInquilino.ObtenerTodos();
 
             return View(lista);
         }
