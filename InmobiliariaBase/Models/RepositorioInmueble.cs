@@ -25,7 +25,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = "SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, PropietarioId," +
+                string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, Latitud, Longitud, PropietarioId," +
                      " p.Nombre, p.Apellido" +
                      " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id";
 
@@ -40,17 +40,18 @@ namespace InmobiliariaBase.Models
                         {
                             Id = reader.GetInt32(0),
                             Direccion = reader.GetString(1),
-                            Ambientes = reader.GetInt32(2),
-                            Superficie = reader.GetInt32(3),
-                            Latitud = reader.GetDecimal(4),
-                            Longitud = reader.GetDecimal(5),
-                            PropietarioId = reader.GetInt32(6),
+                            Tipo = reader.GetString(2),
+                            Ambientes = reader.GetInt32(3),
+                            Superficie = reader.GetInt32(4),
+                            Latitud = reader.GetDecimal(5),
+                            Longitud = reader.GetDecimal(6),
+                            PropietarioId = reader.GetInt32(7),
 
                             Duenio = new Propietario
                             {
-                                Id = reader.GetInt32(6),
-                                Nombre = reader.GetString(7),
-                                Apellido = reader.GetString(8),
+                                Id = reader.GetInt32(0),
+                                Nombre = reader.GetString(8),
+                                Apellido = reader.GetString(9),
                             }
 
                         };
@@ -67,14 +68,15 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"INSERT INTO Inmuebles (Direccion, Ambientes, Superficie, Latitud, Longitud, PropietarioId) " +
-                "VALUES (@direccion, @ambientes, @superficie, @latitud, @longitud, @propietarioId);" +
+                string sql = $"INSERT INTO Inmuebles (Direccion, Tipo, Ambientes, Superficie, Latitud, Longitud, PropietarioId) " +
+                "VALUES (@direccion, @tipo, @ambientes, @superficie, @latitud, @longitud, @propietarioId);" +
                 "SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue("@direccion", i.Direccion);
+                    command.Parameters.AddWithValue("@tipo", i.Tipo);
                     command.Parameters.AddWithValue("@ambientes", i.Ambientes);
                     command.Parameters.AddWithValue("@superficie", i.Superficie);
                     command.Parameters.AddWithValue("@latitud", i.Latitud);
@@ -96,7 +98,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT i.Id, Direccion, Ambientes, Superficie, Latitud, Longitud, PropietarioId, p.Nombre, p.Apellido " +
+                string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, Latitud, Longitud, PropietarioId, p.Nombre, p.Apellido " +
                     $" FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id" +
                     $" WHERE i.Id = @id";
 
@@ -112,17 +114,18 @@ namespace InmobiliariaBase.Models
                         {
                             Id = reader.GetInt32(0),
                             Direccion = reader.GetString(1),
-                            Ambientes = reader.GetInt32(2),
-                            Superficie = reader.GetInt32(3),
-                            Latitud = reader.GetDecimal(4),
-                            Longitud = reader.GetDecimal(5),
-                            PropietarioId = reader.GetInt32(6),
+                            Tipo = reader.GetString(2),
+                            Ambientes = reader.GetInt32(3),
+                            Superficie = reader.GetInt32(4),
+                            Latitud = reader.GetDecimal(5),
+                            Longitud = reader.GetDecimal(6),
+                            PropietarioId = reader.GetInt32(7),
 
                             Duenio = new Propietario
                             {
                                 Id = reader.GetInt32(0),
-                                Nombre = reader.GetString(7),
-                                Apellido = reader.GetString(8)
+                                Nombre = reader.GetString(8),
+                                Apellido = reader.GetString(9)
                             }
                         };
                     }
@@ -137,7 +140,7 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Inmuebles SET " + "Direccion=@direccion, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud, PropietarioId=@propietarioId " +
+                string sql = $"UPDATE Inmuebles SET " + "Direccion=@direccion, Tipo=@tipo, Ambientes=@ambientes, Superficie=@superficie, Latitud=@latitud, Longitud=@longitud, PropietarioId=@propietarioId " +
                     "WHERE Id = @id";
 
 
@@ -145,6 +148,7 @@ namespace InmobiliariaBase.Models
                 {
                     command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue("@direccion", i.Direccion);
+                    command.Parameters.AddWithValue("@tipo", i.Tipo);
                     command.Parameters.AddWithValue("@ambientes", i.Ambientes);
                     command.Parameters.AddWithValue("@superficie", i.Superficie);
                     command.Parameters.AddWithValue("@latitud", i.Latitud);

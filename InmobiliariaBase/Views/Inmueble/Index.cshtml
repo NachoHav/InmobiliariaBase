@@ -1,36 +1,39 @@
 ﻿@model IEnumerable<InmobiliariaBase.Models.Inmueble>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inmuebles";
 }
 
-<h1>Index</h1>
+<h1 class="text-center">Inmuebles</h1>
 
 <p>
-    <a asp-action="Crear">Crear nuevo</a>
+    <a asp-action="Crear" class="btn btn-dark">Crear nuevo</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Id)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Direccion)
             </th>
-            <th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Ambientes)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Superficie)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Latitud)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Longitud)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.PropietarioId)
             </th>
             <th></th>
@@ -39,32 +42,36 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Direccion)
             </td>
-            <td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Tipo)
+            </td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Ambientes)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Superficie)
                 m2
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Latitud)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Longitud)
             </td>
-            <td>
+            <td class="text-center">
                 @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
             </td>
-            <td>
-                @Html.ActionLink("Editar", "Editar", new { id=item.Id}) |
-                @Html.ActionLink("Details", "Details", new {  id=item.Id  }) |
-                @Html.ActionLink("Eliminar", "Eliminar", new {  id=item.Id  })
+            <td class="text-center">
+                <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-primary" title="Editar">Editar</a>
+
+                <a asp-action="Eliminar" asp-route-id="@item.Id" class="btn btn-danger" title="Eliminar">Eliminar</a>
+
             </td>
         </tr>
 }

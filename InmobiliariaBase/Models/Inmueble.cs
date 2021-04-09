@@ -14,6 +14,8 @@ namespace InmobiliariaBase.Models
         [Required]
         public string Direccion { get; set; }
         [Required]
+        public string Tipo { get; set; }
+        [Required]
         public int Ambientes { get; set; }
         [Required]
         public int Superficie { get; set; }
