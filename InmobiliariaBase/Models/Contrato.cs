@@ -11,10 +11,14 @@ namespace InmobiliariaBase.Models
 
         [Display(Name = "Código")]
         public int Id { get; set; }
-        public DateTime FechaDesde { get; set; }    
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime FechaDesde { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaHasta { get; set; }
 
-        public bool Estado { get; set; }
+        public int Estado { get; set; }
 
         [Display(Name = "Inmueble")]
         public int InmuebleId { get; set; }

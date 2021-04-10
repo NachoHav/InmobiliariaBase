@@ -29,7 +29,7 @@ namespace InmobiliariaBase.Models
                 string sql = $"SELECT c.Id, FechaDesde, FechaHasta, Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo " +
                    $" FROM Contratos c " +
                    $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id " +
-                   $"INNER JOIN Inmuebles inm ON inm.InmuebleId = p.Id";
+                   $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -43,7 +43,7 @@ namespace InmobiliariaBase.Models
                             Id = reader.GetInt32(0),
                             FechaDesde = reader.GetDateTime(1),
                             FechaHasta = reader.GetDateTime(2),
-                            Estado = reader.GetBoolean(3),
+                            Estado = reader.GetInt32(3),
                             InquilinoId = reader.GetInt32(4),
                             InmuebleId = reader.GetInt32(5),
 
@@ -108,7 +108,7 @@ namespace InmobiliariaBase.Models
                 string sql = $"SELECT c.Id, FechaDesde, FechaHasta, Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo " +
                     $" FROM Contratos c " +
                     $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id " +
-                    $"INNER JOIN Inmuebles inm ON inm.InmuebleId = p.Id" +
+                    $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id" +
                     $" WHERE c.Id = @id";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
@@ -124,7 +124,7 @@ namespace InmobiliariaBase.Models
                             Id = reader.GetInt32(0),
                             FechaDesde = reader.GetDateTime(1),
                             FechaHasta = reader.GetDateTime(2),
-                            Estado = reader.GetBoolean(3),
+                            Estado = reader.GetInt32(3),
                             InquilinoId = reader.GetInt32(4),
                             InmuebleId = reader.GetInt32(5),
 
