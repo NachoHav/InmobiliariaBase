@@ -49,7 +49,7 @@ namespace InmobiliariaBase.Models
 
                             Duenio = new Propietario
                             {
-                                Id = reader.GetInt32(0),
+                                Id = reader.GetInt32(7),
                                 Nombre = reader.GetString(8),
                                 Apellido = reader.GetString(9),
                             }
