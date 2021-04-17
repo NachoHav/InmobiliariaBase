@@ -27,6 +27,9 @@
             <th class="text-center">
                 @Html.DisplayNameFor(model => model.Superficie)
             </th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Importe)
+            </th>
 
             <th class="text-center">
                 @Html.DisplayNameFor(model => model.PropietarioId)
@@ -53,7 +56,9 @@
                 @Html.DisplayFor(modelItem => item.Superficie)
                 m2
             </td>
-
+            <td class="text-center">
+               $@Html.DisplayFor(modelItem => item.Importe)
+            </td>
             <td class="text-center">
                 @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
             </td>

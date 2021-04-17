@@ -25,7 +25,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, PropietarioId," +
+                string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, Importe, PropietarioId," +
                      " p.Nombre, p.Apellido" +
                      " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id";
 
@@ -43,13 +43,14 @@ namespace InmobiliariaBase.Models
                             Tipo = reader.GetString(2),
                             Ambientes = reader.GetInt32(3),
                             Superficie = reader.GetInt32(4),
-                            PropietarioId = reader.GetInt32(5),
+                            Importe = reader.GetInt32(5),
+                            PropietarioId = reader.GetInt32(6),
 
                             Duenio = new Propietario
                             {
-                                Id = reader.GetInt32(5),
-                                Nombre = reader.GetString(6),
-                                Apellido = reader.GetString(7),
+                                Id = reader.GetInt32(6),
+                                Nombre = reader.GetString(7),
+                                Apellido = reader.GetString(8),
                             }
 
                         };
@@ -66,8 +67,8 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"INSERT INTO Inmuebles (Direccion, Tipo, Ambientes, Superficie, PropietarioId) " +
-                "VALUES (@direccion, @tipo, @ambientes, @superficie, @propietarioId);" +
+                string sql = $"INSERT INTO Inmuebles (Direccion, Tipo, Ambientes, Superficie, Importe, PropietarioId) " +
+                "VALUES (@direccion, @tipo, @ambientes, @superficie, @importe, @propietarioId);" +
                 "SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
@@ -77,6 +78,7 @@ namespace InmobiliariaBase.Models
                     command.Parameters.AddWithValue("@tipo", i.Tipo);
                     command.Parameters.AddWithValue("@ambientes", i.Ambientes);
                     command.Parameters.AddWithValue("@superficie", i.Superficie);
+                    command.Parameters.AddWithValue("@importe", i.Importe);
                     command.Parameters.AddWithValue("@propietarioId", i.PropietarioId);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
@@ -94,7 +96,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, PropietarioId, p.Nombre, p.Apellido " +
+                string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, Importe, PropietarioId, p.Nombre, p.Apellido " +
                     $" FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id" +
                     $" WHERE i.Id = @id";
 
@@ -113,13 +115,14 @@ namespace InmobiliariaBase.Models
                             Tipo = reader.GetString(2),
                             Ambientes = reader.GetInt32(3),
                             Superficie = reader.GetInt32(4),
-                            PropietarioId = reader.GetInt32(5),
+                            Importe = reader.GetInt32(5),
+                            PropietarioId = reader.GetInt32(6),
 
                             Duenio = new Propietario
                             {
-                                Id = reader.GetInt32(5),
-                                Nombre = reader.GetString(6),
-                                Apellido = reader.GetString(7)
+                                Id = reader.GetInt32(6),
+                                Nombre = reader.GetString(7),
+                                Apellido = reader.GetString(8)
                             }
                         };
                     }
@@ -134,7 +137,7 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Inmuebles SET " + "Direccion=@direccion, Tipo=@tipo, Ambientes=@ambientes, Superficie=@superficie, PropietarioId=@propietarioId " +
+                string sql = $"UPDATE Inmuebles SET " + "Direccion=@direccion, Tipo=@tipo, Ambientes=@ambientes, Superficie=@superficie, Importe=@importe, PropietarioId=@propietarioId " +
                     "WHERE Id = @id";
 
 
@@ -145,6 +148,7 @@ namespace InmobiliariaBase.Models
                     command.Parameters.AddWithValue("@tipo", i.Tipo);
                     command.Parameters.AddWithValue("@ambientes", i.Ambientes);
                     command.Parameters.AddWithValue("@superficie", i.Superficie);
+                    command.Parameters.AddWithValue("@importe", i.Importe);
                     command.Parameters.AddWithValue("@propietarioId", i.PropietarioId);
                     command.Parameters.AddWithValue("@id", i.Id);
                     connection.Open();

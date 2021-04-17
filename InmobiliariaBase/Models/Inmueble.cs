@@ -20,9 +20,12 @@ namespace InmobiliariaBase.Models
         [Required]
         public int Superficie { get; set; }
 
+        public float Importe { get; set; }
+
         [Display(Name = "Dueño")]
         public int PropietarioId { get; set; }
         [ForeignKey("PropietarioId")]
         public Propietario Duenio { get; set; }
+
     }
 }
