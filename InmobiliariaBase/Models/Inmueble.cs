@@ -19,8 +19,7 @@ namespace InmobiliariaBase.Models
         public int Ambientes { get; set; }
         [Required]
         public int Superficie { get; set; }
-        public decimal Latitud { get; set; }
-        public decimal Longitud { get; set; }
+
         [Display(Name = "Dueño")]
         public int PropietarioId { get; set; }
         [ForeignKey("PropietarioId")]
