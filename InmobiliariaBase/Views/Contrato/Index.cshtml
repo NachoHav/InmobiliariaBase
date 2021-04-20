@@ -40,6 +40,10 @@
             <th class="text-center">
                 Tipo
             </th>
+
+            <th class="text-center">
+                Importe
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -72,6 +76,9 @@
             </td>
             <td class="text-center">
                 @(item.Inmueble.Tipo)
+            </td>
+            <td class="text-center">
+                $@Html.DisplayFor(modelItem => item.Inmueble.Importe)
             </td>
             <td>
                 <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-primary" title="Editar">Editar</a>

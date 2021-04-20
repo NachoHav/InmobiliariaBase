@@ -1,17 +1,40 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using InmobiliariaBase.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace InmobiliariaBase.Controllers
 {
-    public class UsuarioController : Controller
+    public class UsuarioController : Controller {
+
+        private readonly RepositorioUsuario repositorioUsuario;
+
+        private readonly IConfiguration configuration;
+
+    public UsuarioController(IConfiguration configuration)
     {
+        repositorioUsuario = new RepositorioUsuario(configuration);
+        this.configuration = configuration;
+    }
+
         // GET: UsuarioController
         public ActionResult Index()
         {
+            try
+            {
+                var lista = repositorioUsuario.ObtenerTodos();
+                return View(lista);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
             return View();
         }
 
@@ -22,7 +45,7 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: UsuarioController/Create
-        public ActionResult Create()
+        public ActionResult Crear()
         {
             return View();
         }
@@ -30,49 +53,55 @@ namespace InmobiliariaBase.Controllers
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Crear(Usuario usuario)
         {
             try
             {
+                repositorioUsuario.Alta(usuario);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (SqlException ex)
             {
-                return View();
+                TempData["Error"] = "Ocurrio un error " + ex.ToString();
+                return RedirectToAction(nameof(Index));
             }
         }
 
         // GET: UsuarioController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Editar(int id)
         {
-            return View();
+            var usuario = repositorioUsuario.ObtenerPorId(id);
+            return View(usuario);
         }
 
         // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Editar(int id, Usuario usuario)
         {
             try
             {
+                usuario.Id = id;
+                repositorioUsuario.Modificacion(usuario);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(usuario);
             }
         }
 
         // GET: UsuarioController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Eliminar(int id)
         {
-            return View();
+            repositorioUsuario.Baja(id);
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: UsuarioController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Eliminar(int id, IFormCollection collection)
         {
             try
             {

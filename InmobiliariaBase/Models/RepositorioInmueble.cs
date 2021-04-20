@@ -8,15 +8,13 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaBase.Models
 {
-    public class RepositorioInmueble
+    public class RepositorioInmueble : RepositorioBase
     {
-        private readonly string connectionString;
-        private readonly IConfiguration configuration;
 
-        public RepositorioInmueble(IConfiguration configuration)
+
+        public RepositorioInmueble(IConfiguration configuration) : base(configuration)
         {
-            connectionString = configuration["ConnectionStrings:DefaultConnection"];
-            this.configuration = configuration;
+
         }
 
         public List<Inmueble> ObtenerTodos()

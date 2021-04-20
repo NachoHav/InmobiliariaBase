@@ -8,16 +8,11 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaBase.Models
 {
-    public class RepositorioContrato
+    public class RepositorioContrato : RepositorioBase
     {
-        private readonly string connectionString;
-
-        private readonly IConfiguration configuration;
-
-        public RepositorioContrato(IConfiguration configuration)
+        public RepositorioContrato(IConfiguration configuration) : base(configuration)
         {
-            connectionString = configuration["ConnectionStrings:DefaultConnection"];
-            this.configuration = configuration;
+
         }
 
         public List<Contrato> ObtenerTodos()
@@ -26,7 +21,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT c.Id, FechaDesde, FechaHasta, Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo " +
+                string sql = $"SELECT c.Id, FechaDesde, FechaHasta, Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo , inm.Importe" +
                    $" FROM Contratos c " +
                    $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id " +
                    $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id";
@@ -59,7 +54,8 @@ namespace InmobiliariaBase.Models
                             {
                                 Id = reader.GetInt32(5),
                                 Direccion = reader.GetString(9),
-                                Tipo = reader.GetString(10)
+                                Tipo = reader.GetString(10),
+                                Importe = reader.GetInt32(11)
                             }
 
                         };
