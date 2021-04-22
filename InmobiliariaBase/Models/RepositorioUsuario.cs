@@ -55,7 +55,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Usuarios WHERE Id = @id";
+                string sql = $"UPDATE Usuarios SET Estado = 0 WHERE Id = @id";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -88,6 +88,7 @@ namespace InmobiliariaBase.Models
                     command.Parameters.AddWithValue("@rol", usuario.Rol);
                     command.Parameters.AddWithValue("@clave", usuario.Clave);
                     command.Parameters.AddWithValue("@avatar", usuario.Avatar);
+                    command.Parameters.AddWithValue("@estado", usuario.Estado);
                     
 
                     connection.Open();
@@ -104,7 +105,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = "SELECT id, Email, Nombre, Apellido, Rol, Avatar FROM Usuarios;";
+                string sql = "SELECT id, Email, Nombre, Apellido, Rol, Avatar FROM Usuarios WHERE Estado = 1;";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -137,7 +138,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT id, Nombre, Apellido, Email, Avatar, Rol FROM Usuarios WHERE id = @id;";
+                string sql = $"SELECT id, Nombre, Apellido, Email, Avatar, Rol FROM Usuarios WHERE id = @id AND Estado = 1;";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -170,7 +171,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT Id, Email, Nombre, Apellido, Avatar, Rol, Clave FROM Usuarios WHERE Email = @Email;";
+                string sql = $"SELECT Id, Email, Nombre, Apellido, Avatar, Rol, Clave FROM Usuarios WHERE Email = @Email AND Estado = 1;";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {

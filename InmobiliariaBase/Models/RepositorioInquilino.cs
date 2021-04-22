@@ -24,7 +24,7 @@ namespace InmobiliariaBase.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Email" +
-                    $" FROM Inquilinos";
+                    $" FROM Inquilinos WHERE Estado = 1";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -81,7 +81,7 @@ namespace InmobiliariaBase.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Email" +
-                    $" FROM Inquilinos WHERE Id = @id";
+                    $" FROM Inquilinos WHERE Id = @id AND Estado = 1";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", SqlDbType.Int).Value = id;
@@ -138,7 +138,7 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Inquilinos WHERE Id = @id";
+                string sql = $"UPDATE Inquilinos SET Estado = 0 WHERE Id = @id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;

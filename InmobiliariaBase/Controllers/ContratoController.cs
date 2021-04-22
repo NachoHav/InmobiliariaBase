@@ -59,7 +59,7 @@ namespace InmobiliariaBase.Controllers
                 repositorioContrato.Alta(contrato);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
@@ -85,7 +85,7 @@ namespace InmobiliariaBase.Controllers
                 repositorioContrato.Modificar(contrato);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
@@ -110,7 +110,7 @@ namespace InmobiliariaBase.Controllers
                 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }

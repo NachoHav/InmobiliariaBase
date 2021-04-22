@@ -21,10 +21,12 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT c.Id, FechaDesde, FechaHasta, Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo , inm.Importe" +
+                string sql = $"SELECT c.Id, FechaDesde, FechaHasta, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo , inm.Importe" +
                    $" FROM Contratos c " +
-                   $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id " +
-                   $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id";
+                   $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id AND i.Estado = 1 " +
+                   $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id AND inm.Estado = 1 " +
+                   $"INNER JOIN Propietarios propietario ON inm.PropietarioId = propietario.Id AND propietario.Estado = 1 " +
+                   $"WHERE c.Estado = 1";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -38,24 +40,23 @@ namespace InmobiliariaBase.Models
                             Id = reader.GetInt32(0),
                             FechaDesde = reader.GetDateTime(1),
                             FechaHasta = reader.GetDateTime(2),
-                            Estado = reader.GetInt32(3),
-                            InquilinoId = reader.GetInt32(4),
-                            InmuebleId = reader.GetInt32(5),
+                            InquilinoId = reader.GetInt32(3),
+                            InmuebleId = reader.GetInt32(4),
 
                             Inquilino = new Inquilino
                             {
-                                Id = reader.GetInt32(4),
-                                Nombre = reader.GetString(6),
-                                Apellido = reader.GetString(7),
-                                Dni = reader.GetString(8)
+                                Id = reader.GetInt32(3),
+                                Nombre = reader.GetString(5),
+                                Apellido = reader.GetString(6),
+                                Dni = reader.GetString(7)
                             },
 
                             Inmueble = new Inmueble
                             {
-                                Id = reader.GetInt32(5),
-                                Direccion = reader.GetString(9),
-                                Tipo = reader.GetString(10),
-                                Importe = reader.GetInt32(11)
+                                Id = reader.GetInt32(4),
+                                Direccion = reader.GetString(8),
+                                Tipo = reader.GetString(9),
+                                Importe = reader.GetInt32(10)
                             }
 
                         };
@@ -101,11 +102,12 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT c.Id, FechaDesde, FechaHasta, Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo " +
+                string sql = $"SELECT c.Id, FechaDesde, FechaHasta, c.Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo " +
                     $" FROM Contratos c " +
-                    $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id " +
-                    $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id" +
-                    $" WHERE c.Id = @id";
+                    $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id WHERE i.Estado = 1 " +
+                    $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id WHERE inm.Estado = 1 " +
+                    $"INNER JOIN Propietarios propietario ON inm.PropietarioId = propietario.Id WHERE propietario.Estado = 1" +
+                    $" WHERE c.Id = @id AND c.Estado = 1";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -178,7 +180,7 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Contratos WHERE Id = @id";
+                string sql = $"UPDATE Contratos SET Estado = 0 WHERE Id = @id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;

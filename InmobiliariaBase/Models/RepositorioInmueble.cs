@@ -25,7 +25,7 @@ namespace InmobiliariaBase.Models
             {
                 string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, Importe, PropietarioId," +
                      " p.Nombre, p.Apellido" +
-                     " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id";
+                     " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id WHERE i.Estado = 1 AND p.Estado = 1";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -96,7 +96,7 @@ namespace InmobiliariaBase.Models
             {
                 string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, Importe, PropietarioId, p.Nombre, p.Apellido " +
                     $" FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id" +
-                    $" WHERE i.Id = @id";
+                    $" WHERE i.Id = @id AND i.Estado = 1 AND p.Estado = 1";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -163,7 +163,7 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Inmuebles WHERE Id = @id";
+                string sql = $"UPDATE Inmuebles SET Estado = 0 WHERE Id = @id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;

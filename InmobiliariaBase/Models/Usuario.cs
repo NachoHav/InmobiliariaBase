@@ -33,6 +33,7 @@ namespace InmobiliariaBase.Models
         public string Clave { get; set; }
 
         public string Avatar { get; set; }
+        public bool Estado { get; set; }
 
         public string RolNombre => Rol > 0 ? ((Roles)Rol).ToString() : "";
 

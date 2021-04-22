@@ -52,8 +52,10 @@ namespace InmobiliariaBase.Controllers
             {
                 repositorioPropietario.Alta(propietario);
                 TempData["Id"] = propietario.Id;
-                //return RedirectToAction(nameof(Index));            
-                return View();
+                //return RedirectToAction(nameof(Index));
+                var lista = repositorioPropietario.Obtener();
+                ViewData[nameof(Propietario)] = lista;
+                return View("Index");
             }
             catch (Exception ex)
             {
@@ -97,7 +99,7 @@ namespace InmobiliariaBase.Controllers
 
         // GET: PropietarioController/Delete/5
         [Authorize(Policy = "Admin")]
-        public ActionResult Delete(int id)
+        public ActionResult Eliminar(int id)
         {
             repositorioPropietario.Baja(id);
             return RedirectToAction(nameof(Index));
@@ -107,7 +109,7 @@ namespace InmobiliariaBase.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Admin")]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Eliminar(int id, IFormCollection collection)
         {
             try
             {
