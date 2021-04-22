@@ -1,4 +1,5 @@
 ﻿using InmobiliariaBase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,13 +10,16 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaBase.Controllers
 {
+    [Authorize]
     public class InmuebleController : Controller
     {
         private readonly RepositorioInmueble repositorioInmueble;
         private readonly IConfiguration configuration;
+        private readonly RepositorioPropietario repositorioPropietario;
 
         public InmuebleController(IConfiguration configuration)
         {
+            repositorioPropietario = new RepositorioPropietario(configuration);
             repositorioInmueble = new RepositorioInmueble(configuration);
             this.configuration = configuration;
         }
@@ -35,7 +39,7 @@ namespace InmobiliariaBase.Controllers
         // GET: InmuebleController/Create
         public ActionResult Crear()
         {
-
+            ViewBag.Propietarios = repositorioPropietario.Obtener();
             return View();
         }
 
@@ -58,6 +62,7 @@ namespace InmobiliariaBase.Controllers
         // GET: InmuebleController/Edit/5
         public ActionResult Editar(int id)
         {
+            ViewBag.Propietarios = repositorioPropietario.Obtener();
             var inmueble = repositorioInmueble.ObtenerInmueble(id);
             return View(inmueble);
         }
@@ -83,6 +88,7 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: InmuebleController/Delete/5
+        [Authorize(Policy = "Admin")]
         public ActionResult Eliminar(int id)
         {
             repositorioInmueble.Baja(id);
@@ -92,6 +98,7 @@ namespace InmobiliariaBase.Controllers
         // POST: InmuebleController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public ActionResult Eliminar(int id, IFormCollection collection)
         {
             try

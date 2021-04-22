@@ -1,14 +1,17 @@
 ﻿using InmobiliariaBase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace InmobiliariaBase.Controllers
 {
+    [Authorize]
     public class InquilinoController : Controller
     {
         private readonly RepositorioInquilino repositorioInquilino;
@@ -92,15 +95,26 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: InquilinoController/Delete/5
+        [Authorize(Policy = "Admin")]
         public ActionResult Eliminar(int id)
         {
-            repositorioInquilino.Baja(id);
-            return RedirectToAction(nameof(Index));
+
+            try
+            {
+                repositorioInquilino.Baja(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (SqlException ex)
+            {
+                TempData["Error"] = "Ocurrio un error " + ex.ToString();
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: InquilinoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public ActionResult Eliminar(int id, IFormCollection collection)
         {
             try

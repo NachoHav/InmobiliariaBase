@@ -16,19 +16,16 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th class="text-center">
-                @Html.DisplayNameFor(model => model.FechaDesde)
+                Fecha Inicio
             </th>
             <th class="text-center">
-                @Html.DisplayNameFor(model => model.FechaHasta)
+                Fecha Fin
             </th>
             <th class="text-center">
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
             <th class="text-center">
                 @Html.DisplayNameFor(model => model.InmuebleId)
-            </th>
-            <th class="text-center">
-                @Html.DisplayNameFor(model => model.InquilinoId)
             </th>
             <th class="text-center">
                 Inquilino
@@ -64,9 +61,6 @@
             </td>
             <td class="text-center">
                 @Html.DisplayFor(modelItem => item.InmuebleId)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.InquilinoId)
             </td>
             <td class="text-center">
                 @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)

@@ -1,4 +1,5 @@
 ﻿using InmobiliariaBase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaBase.Controllers
 {
+    [Authorize]
     public class PropietarioController : Controller
     {
         private readonly RepositorioPropietario repositorioPropietario;
@@ -94,6 +96,7 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: PropietarioController/Delete/5
+        [Authorize(Policy = "Admin")]
         public ActionResult Delete(int id)
         {
             repositorioPropietario.Baja(id);
@@ -103,6 +106,7 @@ namespace InmobiliariaBase.Controllers
         // POST: PropietarioController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

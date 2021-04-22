@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaBase.Controllers
 {
+    [Authorize]
     public class PagoController : Controller
     {
         // GET: PagoController
@@ -64,6 +66,7 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: PagoController/Delete/5
+        [Authorize(Policy = "Admin")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -72,6 +75,7 @@ namespace InmobiliariaBase.Controllers
         // POST: PagoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

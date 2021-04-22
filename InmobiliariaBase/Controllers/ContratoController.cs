@@ -1,4 +1,5 @@
 ﻿using InmobiliariaBase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,16 +10,21 @@ using System.Threading.Tasks;
 
 namespace InmobiliariaBase.Controllers
 {
+    [Authorize]
     public class ContratoController : Controller
     {
 
         private readonly RepositorioContrato repositorioContrato;
+        private readonly RepositorioInmueble repositorioInmueble;
+        private readonly RepositorioInquilino repositorioInquilino;
         private readonly IConfiguration configuration;
 
 
         public ContratoController(IConfiguration configuration)
         {
             repositorioContrato = new RepositorioContrato(configuration);
+            repositorioInmueble = new RepositorioInmueble(configuration);
+            repositorioInquilino = new RepositorioInquilino(configuration);
             this.configuration = configuration;
         }
 
@@ -38,6 +44,8 @@ namespace InmobiliariaBase.Controllers
         // GET: ContratoController/Create
         public ActionResult Crear()
         {
+            ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+            ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
             return View();
         }
 
@@ -61,6 +69,8 @@ namespace InmobiliariaBase.Controllers
         public ActionResult Editar(int id)
         {
             var contrato = repositorioContrato.ObtenerContrato(id);
+            ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+            ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
             return View(contrato);
         }
 
@@ -82,6 +92,7 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: ContratoController/Delete/5
+        [Authorize(Policy = "Admin")]
         public ActionResult Eliminar(int id)
         {
             repositorioContrato.Baja(id);
@@ -91,6 +102,7 @@ namespace InmobiliariaBase.Controllers
         // POST: ContratoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public ActionResult Eliminar(int id, IFormCollection collection)
         {
             try

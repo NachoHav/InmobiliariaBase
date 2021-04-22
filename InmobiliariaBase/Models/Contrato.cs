@@ -13,13 +13,11 @@ namespace InmobiliariaBase.Models
         [Required]
         public int Id { get; set; }
 
-        //[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         [Required]
         public DateTime FechaDesde { get; set; }
         [Required]
 
-        //[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
 
         public DateTime FechaHasta { get; set; }

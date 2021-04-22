@@ -2,7 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 
+
 <div class="text-center">
     <h1 class="display-4">TITULO</h1>
-   
+
 </div>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    await Html.RenderPartialAsync("Iniciar", new Usuario());
+}

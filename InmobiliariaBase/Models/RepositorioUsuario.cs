@@ -170,11 +170,11 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT id, Nombre, Apellido, Email, Avatar, Rol FROM Usuarios WHERE Email = @email;";
+                string sql = $"SELECT Id, Email, Nombre, Apellido, Avatar, Rol, Clave FROM Usuarios WHERE Email = @Email;";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    command.Parameters.Add("@email", SqlDbType.VarChar).Value = email;
+                    command.Parameters.Add("@Email", SqlDbType.VarChar).Value = email;
                     command.CommandType = CommandType.Text;
                     connection.Open();
                     var reader = command.ExecuteReader();
@@ -184,11 +184,12 @@ namespace InmobiliariaBase.Models
                         usuario = new Usuario()
                         {
                             Id = reader.GetInt32(0),
-                            Nombre = reader.GetString(1),
-                            Apellido = reader.GetString(2),
-                            Email = reader.GetString(3),
+                            Email = reader.GetString(1),
+                            Nombre = reader.GetString(2),
+                            Apellido = reader.GetString(3),                           
                             Avatar = reader.GetString(4),
                             Rol = reader.GetInt32(5),
+                            Clave = reader.GetString(6),
                         };
                     }
                 }
