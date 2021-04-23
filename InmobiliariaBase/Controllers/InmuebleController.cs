@@ -110,5 +110,19 @@ namespace InmobiliariaBase.Controllers
                 return View();
             }
         }
+
+        public ActionResult InmueblePropietario(int id)
+        {
+            try
+            {
+                var lista = repositorioInmueble.ObtenerPorPropietario(id);
+                return View("Index", lista);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }

@@ -15,15 +15,17 @@ namespace InmobiliariaBase.Models
 
         [DataType(DataType.Date)]
         [Required]
+
+        [Display(Name = "Fecha Inicio")]
         public DateTime FechaDesde { get; set; }
         [Required]
 
         [DataType(DataType.Date)]
-
+        [Display(Name = "Fecha Fin")]
         public DateTime FechaHasta { get; set; }
         [Required]
 
-        public int Estado { get; set; }
+        public bool Estado { get; set; }
         [Required]
 
         [Display(Name = "Inmueble")]
