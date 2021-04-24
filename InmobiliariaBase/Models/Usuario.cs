@@ -9,7 +9,7 @@ namespace InmobiliariaBase.Models
 
     public enum Roles
     {
-        SuperAdmin = 1,
+        SuperAdmin =1,
         Admin = 2,
         Employee = 3,
     } 

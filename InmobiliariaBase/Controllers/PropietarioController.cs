@@ -38,8 +38,7 @@ namespace InmobiliariaBase.Controllers
 
         // GET: PropietarioController/Create
         public ActionResult Crear()
-        {
-
+        {           
             return View();
         }
 
@@ -102,7 +101,7 @@ namespace InmobiliariaBase.Controllers
         public ActionResult Eliminar(int id)
         {
             repositorioPropietario.Baja(id);
-            return RedirectToAction(nameof(Index));
+            return View("Index");
         }
 
         // POST: PropietarioController/Delete/5

@@ -53,7 +53,17 @@ namespace InmobiliariaBase.Controllers
         // GET: UsuarioController/Create
         public ActionResult Crear()
         {
-            return View();
+            try
+            {
+                ViewBag.Roles = Usuario.ObtenerRoles();
+                return View();
+            }
+            catch (SqlException ex)
+            {
+
+                throw;
+            }
+            
         }
 
         // POST: UsuarioController/Create
@@ -64,13 +74,15 @@ namespace InmobiliariaBase.Controllers
         {
             try
             {
+                
+
                 usuario.Clave = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                         password: usuario.Clave,
                         salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
                         prf: KeyDerivationPrf.HMACSHA1,
                         iterationCount: 1000,
                         numBytesRequested: 256 / 8));
-                usuario.Rol = 0;
+                usuario.Rol = 3;
                 repositorioUsuario.Alta(usuario);
                 TempData["Info"] = "Cuenta creada correctamente";
                 return RedirectToAction(nameof(Iniciar));
@@ -83,24 +95,29 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: UsuarioController/Edit/5
+        [Authorize(Policy = "Admin")]
         public ActionResult Editar(int id)
         {
             var usuario = repositorioUsuario.ObtenerPorId(id);
+            ViewBag.Roles = Usuario.ObtenerRoles();
             return View(usuario);
         }
 
         // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Admin")]
         public ActionResult Editar(int id, Usuario usuario)
         {
             try
             {
                 usuario.Id = id;
                 repositorioUsuario.Modificacion(usuario);
-                return RedirectToAction(nameof(Index));
+                var lista = repositorioUsuario.ObtenerTodos();
+                return View("Index",lista);
+                
             }
-            catch
+            catch (SqlException ex)
             {
                 return View(usuario);
             }
@@ -152,7 +169,7 @@ namespace InmobiliariaBase.Controllers
                         numBytesRequested: 256 / 8));
 
 
-                    if (usuario.Email == null || usuario.Clave != hashed)
+                    if (usuario == null || usuario.Clave != hashed)
                     {
                         TempData["Error"] = "Error al iniciar sesión.";
                         return View();

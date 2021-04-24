@@ -15,8 +15,12 @@ namespace InmobiliariaBase.Models
         public int IdContrato { get; set; }
         public Contrato Contrato { get; set; }
 
+        [DataType(DataType.Date)]
         [Display(Name = "Fecha de Pago")]
         public DateTime FechaPago { get; set; }
 
+        public bool Estado { get; set; }
+
+        public int Importe { get; set; }
     }
 }

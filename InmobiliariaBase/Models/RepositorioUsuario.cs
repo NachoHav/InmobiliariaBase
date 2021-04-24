@@ -76,19 +76,20 @@ namespace InmobiliariaBase.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sql = $"UPDATE Usuarios SET Email = @email, Nombre = @nombre, " +
-                    $"Apellido = @apellido, Rol = @rol, Clave = @clave, Avatar = @avatar " +
+                    $"Apellido = @apellido, Rol = @rol, Avatar = @avatar " +
                     $"WHERE id = @id;";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
+                    command.Parameters.AddWithValue("@id", usuario.Id);
                     command.Parameters.AddWithValue("@email", usuario.Email);
                     command.Parameters.AddWithValue("@nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@rol", usuario.Rol);
-                    command.Parameters.AddWithValue("@clave", usuario.Clave);
+                    
                     command.Parameters.AddWithValue("@avatar", usuario.Avatar);
-                    command.Parameters.AddWithValue("@estado", usuario.Estado);
+                    
                     
 
                     connection.Open();

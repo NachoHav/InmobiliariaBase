@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using InmobiliariaBase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +13,21 @@ namespace InmobiliariaBase.Controllers
     [Authorize]
     public class PagoController : Controller
     {
+        private readonly RepositorioPago repositorioPago;
+        private readonly RepositorioContrato repositorioContrato;
+        private readonly IConfiguration configuration;
+
+        public PagoController(IConfiguration configuration)
+        {
+            repositorioPago = new RepositorioPago(configuration);
+            repositorioContrato = new RepositorioContrato(configuration);
+            this.configuration = configuration;
+        }
         // GET: PagoController
         public ActionResult Index()
         {
+
+
             return View();
         }
 
@@ -24,19 +38,33 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: PagoController/Create
-        public ActionResult Create()
+        public ActionResult Crear(int id)
         {
+
+          
+            /*            ViewBag.ContratoId = id;*/
+          
+            //ViewData["Contrato"] = repositorioContrato.ObtenerContrato(id);
+            ViewBag.Contrato = repositorioContrato.ObtenerContrato(id);
             return View();
         }
 
         // POST: PagoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Crear(int id, Pago pago)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                pago.Id = id;
+
+                repositorioPago.Alta(pago);
+                var list = repositorioPago.ObtenerTodos(pago.IdContrato);
+                ViewBag.Contrato = repositorioContrato.ObtenerContrato(id);
+                ViewBag.ContratoId = id;
+
+
+                return View("Index", list);
             }
             catch
             {
@@ -67,16 +95,28 @@ namespace InmobiliariaBase.Controllers
 
         // GET: PagoController/Delete/5
         [Authorize(Policy = "Admin")]
-        public ActionResult Delete(int id)
+        public ActionResult Eliminar(int id, int idC)
         {
-            return View();
+            try
+            {                 
+                repositorioPago.Baja(id);
+                var list = repositorioPago.ObtenerTodos(idC);
+                ViewBag.ContratoId = idC;
+                return View("Index", list);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
 
         // POST: PagoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Admin")]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Eliminar(int id, IFormCollection collection)
         {
             try
             {
@@ -86,6 +126,19 @@ namespace InmobiliariaBase.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult ObtenerPorContrato(int id)
+        {
+            var list = repositorioPago.ObtenerTodos(id);
+            ViewBag.Contrato = repositorioContrato.ObtenerContrato(id);
+            ViewBag.ContratoId = id;
+                //ViewBag.ContratoId = id;*/
+            
+            //ViewData["Contrato"] = repositorioContrato.ObtenerContrato(id);
+            
+
+            return View("Index", list);
         }
     }
 }

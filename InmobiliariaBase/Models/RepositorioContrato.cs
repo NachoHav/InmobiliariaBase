@@ -102,12 +102,14 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT c.Id, FechaDesde, FechaHasta, c.Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo " +
+                string sql = $"SELECT c.Id, FechaDesde, FechaHasta, c.Estado, InquilinoId, InmuebleId, i.Nombre, i.Apellido, i.Dni, inm.Direccion, inm.Tipo, inm.Importe " +
                     $"FROM Contratos c " +
                     $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id AND i.Estado = 1 " +
                     $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id AND inm.Estado = 1 " +
-                    $"INNER JOIN Propietarios propietario ON inm.PropietarioId = propietario.Id AND propietario.Estado = 1" +
+                    
                     $" WHERE c.Id = @id AND c.Estado = 1";
+
+                //$"INNER JOIN Propietarios propietario ON inm.PropietarioId = propietario.Id AND propietario.Estado = 1" +
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -138,7 +140,8 @@ namespace InmobiliariaBase.Models
                             {
                                 Id = reader.GetInt32(5),
                                 Direccion = reader.GetString(9),
-                                Tipo = reader.GetString(10)
+                                Tipo = reader.GetString(10),
+                                Importe = reader.GetInt32(11),
                             }
                         };
                     }
