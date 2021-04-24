@@ -104,7 +104,7 @@ namespace InmobiliariaBase.Controllers
         public ActionResult Eliminar(int id)
         {
             repositorioPropietario.Baja(id);
-            return View("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: PropietarioController/Delete/5
