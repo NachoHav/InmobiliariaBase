@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace InmobiliariaBase.Models
 {
 
     public enum Roles
-    {
+    {        
         SuperAdmin =1,
         Admin = 2,
         Employee = 3,
@@ -33,6 +34,8 @@ namespace InmobiliariaBase.Models
         public string Clave { get; set; }
 
         public string Avatar { get; set; }
+
+        public IFormFile AvatarFile { get; set; }
         public bool Estado { get; set; }
 
         public string RolNombre => Rol > 0 ? ((Roles)Rol).ToString() : "";

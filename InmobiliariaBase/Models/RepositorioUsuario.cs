@@ -33,7 +33,7 @@ namespace InmobiliariaBase.Models
                     command.Parameters.AddWithValue("@email", usuario.Email);
                     command.Parameters.AddWithValue("@clave", usuario.Clave);
                     if (String.IsNullOrEmpty(usuario.Avatar))
-                        command.Parameters.AddWithValue("@avatar", DBNull.Value);
+                        command.Parameters.AddWithValue("@avatar", "Sin Avatar");
                     else
                         command.Parameters.AddWithValue("@avatar", usuario.Avatar);
                     command.Parameters.AddWithValue("@rol", usuario.Rol);
@@ -87,10 +87,13 @@ namespace InmobiliariaBase.Models
                     command.Parameters.AddWithValue("@nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@rol", usuario.Rol);
-                    
-                    command.Parameters.AddWithValue("@avatar", usuario.Avatar);
-                    
-                    
+
+                    if (String.IsNullOrEmpty(usuario.Avatar))
+                        command.Parameters.AddWithValue("@avatar", "Sin avatar");
+                    else
+                        command.Parameters.AddWithValue("@avatar", usuario.Avatar);
+
+
 
                     connection.Open();
                     res = command.ExecuteNonQuery();

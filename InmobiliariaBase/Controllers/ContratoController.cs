@@ -129,5 +129,40 @@ namespace InmobiliariaBase.Controllers
                 throw;
             }
         }
+
+        public ActionResult ContratosVigentes()
+        {
+            try
+            {
+                var list = repositorioContrato.ObtenerVigentes();
+                return View("Index", list);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public ActionResult ContratosBajas()
+        {
+            try
+            {
+                var list = repositorioContrato.ObtenerBajas();
+                return View("Index", list);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }        
+        }
+
+        public ActionResult Activar(int id)
+        {
+            repositorioContrato.Activar(id);           
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

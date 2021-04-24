@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Editar";
+
+
+
 }
 
 <h1>Editar</h1>
@@ -10,7 +13,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4 mx-auto">
-        <form asp-action="Editar">
+        <form asp-action="Editar" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Id" class="control-label"></label>
@@ -33,7 +36,7 @@
                 <span asp-validation-for="Apellido" class="text-danger"></span>
             </div>
 
-           
+
 
             @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
             {
@@ -41,20 +44,15 @@
                     <label class="control-label">Rol</label>
                     <select class="form-control" name="Rol">
                         @foreach (var kvp in (IDictionary<int, string>)ViewBag.Roles)
-                          
-                            {
-                                @:<option @(kvp.Key == Model.Rol ? "selected" : "") value="@kvp.Key">@kvp.Value</option>
-                            }
+                        {
+                            @:<option @(kvp.Key == Model.Rol ? "selected" : "") value="@kvp.Key">@kvp.Value</option>
+                        }
                     </select>
                     <span asp-validation-for="Rol" class="text-danger"></span>
                 </div>
             }
 
-            <div class="form-group">
-                <label asp-for="Avatar" class="control-label"></label>
-                <input asp-for="Avatar" class="form-control" />
-                <span asp-validation-for="Avatar" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-outline-dark" />
             </div>
