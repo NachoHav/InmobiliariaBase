@@ -25,16 +25,13 @@ namespace InmobiliariaBase.Controllers
         // GET: InquilinoController
         public ActionResult Index()
         {
+            ViewBag.Error = TempData["Error"];
             var lista = repositorioInquilino.ObtenerTodos();
 
             return View(lista);
         }
 
-        // GET: InquilinoController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+
 
         // GET: InquilinoController/Create
         public ActionResult Crear()
@@ -56,7 +53,8 @@ namespace InmobiliariaBase.Controllers
             }
             catch
             {
-                return View();
+                TempData["Error"] = "Error, no se pudo crear el Inquilino.";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -88,9 +86,10 @@ namespace InmobiliariaBase.Controllers
             }
             catch(Exception ex)
             {
-                ViewBag.Error = ex.Message;
+                TempData["Error"] = "Error, no se pudo editar el Inquilino.";
+                return RedirectToAction(nameof(Index));
                 ViewBag.StackTrate = ex.StackTrace;
-                return View(null);            
+                   
             }
         }
 

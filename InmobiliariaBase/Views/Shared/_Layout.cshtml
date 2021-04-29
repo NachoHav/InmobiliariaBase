@@ -70,6 +70,7 @@
 
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Contrato" asp-action="Index">Contratos</a>
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Contrato" asp-action="Crear">Crear</a>
+                                    <a class="dropdown-item text-dark" asp-area="" data-toggle="modal" data-target="#filtroFechas">Filtrar por fechas</a>
 
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Contrato" asp-action="ContratosVigentes">Contratos Actuales</a>
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Contrato" asp-action="ContratosBajas">Eliminados</a>
@@ -91,7 +92,8 @@
                                         <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Crear">Crear</a>
 
                                     </div>
-                                </div>                               
+                                </div>
+
                             }
 
                             <div class="dropdown ml-1 mr-1">
@@ -113,13 +115,64 @@
                                     </a>
                                 </div>
                             </div>
-                          }
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
+
+
+        <div class="modal fade" id="filtroFechas" tabindex="-1" role="dialog" aria-labelledby="filtroFechas" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Buscar contratos por fechas</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Seleccione fechas para filtrar.
+                        </p>
+                        <form asp-action="ObtenerPorFechas" asp-controller="Contrato">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label class="control-label">Fecha de inicio</label>
+                                    <input name="fechaDesde" id="fechaDesde" type="date" required class="form-control" />
+                                </div>
+                                <div class="form-group col">
+                                    <label class="control-label">Fecha de cierre</label>
+                                    <input name="fechaHasta" id="fechaHasta" type="date" required class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Salir</button>
+                                <button type="submit" class="btn btn-outline-dark"><i class="fas fa-search"></i> Buscar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </header>
-    <div class="container">
+
+
+    @if (!String.IsNullOrEmpty(ViewBag.Error)) 
+    { 
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Informacion:</strong>@ViewBag.Error
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">X</button>
+            </div>
+        </div>
+    }
+
+
+
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -127,12 +180,14 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - InmobiliariaBase - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2021 - InmobiliariaHavelka - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+
 </body>
 </html>

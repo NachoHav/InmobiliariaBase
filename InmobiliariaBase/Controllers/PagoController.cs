@@ -27,7 +27,7 @@ namespace InmobiliariaBase.Controllers
         public ActionResult Index()
         {
 
-
+            ViewBag.Error = TempData["Error"];
             return View();
         }
 
@@ -68,7 +68,8 @@ namespace InmobiliariaBase.Controllers
             }
             catch
             {
-                return View();
+                TempData["Error"] = "Error, no se creo el pago.";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -107,7 +108,8 @@ namespace InmobiliariaBase.Controllers
             catch (Exception ex)
             {
 
-                throw;
+                TempData["Error"] = "Error, no se eliminó el pago.";
+                return RedirectToAction(nameof(Index));
             }
 
         }
@@ -130,15 +132,25 @@ namespace InmobiliariaBase.Controllers
 
         public ActionResult ObtenerPorContrato(int id)
         {
-            var list = repositorioPago.ObtenerTodos(id);
-            ViewBag.Contrato = repositorioContrato.ObtenerContrato(id);
-            ViewBag.ContratoId = id;
+            try
+            {
+                var list = repositorioPago.ObtenerTodos(id);
+                ViewBag.Contrato = repositorioContrato.ObtenerContrato(id);
+                ViewBag.ContratoId = id;
                 //ViewBag.ContratoId = id;*/
-            
-            //ViewData["Contrato"] = repositorioContrato.ObtenerContrato(id);
-            
 
-            return View("Index", list);
+                //ViewData["Contrato"] = repositorioContrato.ObtenerContrato(id);
+
+
+                return View("Index", list);
+            }
+            catch (Exception)
+            {
+
+                TempData["Error"] = "Error, no se obtuvo el pago.";
+                return RedirectToAction(nameof(Index));
+            }
+
         }
     }
 }

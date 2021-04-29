@@ -1,0 +1,24 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Contrato c = (Contrato)ViewData["Contrato"];
+}
+
+<h1 class="text-center">Cancelacion de Contrato</h1>
+
+<div class="card mx-auto col-4 my-center bg-light d-flex align-items-center justify-content-center">
+    <div class="card-body">
+        <h4 class="card-title">Cancelar Contrato @c.Id</h4>
+        <p class="card-text text-center">
+           @c.Inquilino.Nombre @c.Inquilino.Apellido debe pagar una multa de: @ViewData["Multa"] <br/>
+            La fecha de finalización de contrato sobre el inmueble @c.InmuebleId - @c.Inmueble.Direccion será: @DateTime.Now            
+        </p>
+        <a asp-action="Index" class="btn btn-outline-danger">
+            Volver
+        </a>
+        <button type="submit" class="btn btn-outline-dark"><i class="fas fa-search"></i> Confirmar</button>
+    </div>
+</div>
+
+

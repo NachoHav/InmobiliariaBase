@@ -25,6 +25,7 @@ namespace InmobiliariaBase.Controllers
         // GET: PropietarioController
         public ActionResult Index()
         {
+            ViewBag.Error = TempData["Error"];
             var lista = repositorioPropietario.Obtener();
             ViewData[nameof(Propietario)] = lista;
             return View();
@@ -61,7 +62,8 @@ namespace InmobiliariaBase.Controllers
             }
             catch (Exception ex)
             {
-                return View();
+                TempData["Error"] = "Error, no se crear el propietario.";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -93,9 +95,9 @@ namespace InmobiliariaBase.Controllers
             }
             catch(Exception ex)
             {
-                ViewBag.Error = ex.Message;
+                TempData["Error"] = "Error, no se crear el propietario.";
+                return RedirectToAction(nameof(Index));
                 ViewBag.StackTrate = ex.StackTrace;
-                return View(null);
             }
         }
 

@@ -41,5 +41,7 @@ namespace InmobiliariaBase.Models
         [Required]
 
         public Inmueble Inmueble { get; set; }
+
+        public int Importe { get; set; }
     }
 }

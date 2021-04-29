@@ -25,17 +25,18 @@ namespace InmobiliariaBase.Controllers
         private readonly IWebHostEnvironment environment;
 
         public UsuarioController(IConfiguration configuration, IWebHostEnvironment environment)
-    {
+        {
             repositorioUsuario = new RepositorioUsuario(configuration);
             this.environment = environment;
             this.configuration = configuration;
-    }
+        }
 
         // GET: UsuarioController
         public ActionResult Index()
         {
             try
             {
+                ViewBag.Error = TempData["Error"];
                 var lista = repositorioUsuario.ObtenerTodos();
                 return View(lista);
             }
@@ -64,7 +65,8 @@ namespace InmobiliariaBase.Controllers
             catch (SqlException ex)
             {
 
-                throw;
+                TempData["Error"] = "Error, no se pudo crear el usuario.";
+                return RedirectToAction(nameof(Index));
             }
             
         }
@@ -111,12 +113,14 @@ namespace InmobiliariaBase.Controllers
                 catch (Exception ex)
                 {
                     ViewBag.Roles = Usuario.ObtenerRoles();
-                    return View();
+                    TempData["Error"] = "Error, no se pudo crear el usuario.";
+                    return RedirectToAction(nameof(Index));
                 }
             }
             else
             {
-                return View();
+                TempData["Error"] = "Error, no se pudo crear el usuario.";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -124,9 +128,19 @@ namespace InmobiliariaBase.Controllers
         [Authorize(Policy = "Admin")]
         public ActionResult Editar(int id)
         {
-            var usuario = repositorioUsuario.ObtenerPorId(id);
-            ViewBag.Roles = Usuario.ObtenerRoles();
-            return View(usuario);
+            try
+            {
+                var usuario = repositorioUsuario.ObtenerPorId(id);
+                ViewBag.Roles = Usuario.ObtenerRoles();
+                return View(usuario);
+            }
+            catch (Exception)
+            {
+
+                TempData["Error"] = "Error, no se pudo editar el usuario.";
+                return RedirectToAction(nameof(Index));
+            }
+
         }
 
         // POST: UsuarioController/Edit/5
@@ -148,7 +162,10 @@ namespace InmobiliariaBase.Controllers
             }
             catch (SqlException ex)
             {
-                return View(usuario);
+
+                TempData["Error"] = "Error, no se pudo editar el usuario.";
+                return RedirectToAction(nameof(Index));
+
             }
         }
 
@@ -156,8 +173,19 @@ namespace InmobiliariaBase.Controllers
         [Authorize(Policy = "Admin")]
         public ActionResult Eliminar(int id)
         {
-            repositorioUsuario.Baja(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                repositorioUsuario.Baja(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+
+
+                TempData["Error"] = "Error, no se pudo eliminar el usuario.";
+                return RedirectToAction(nameof(Index));
+            }
+
         }
 
         // POST: UsuarioController/Delete/5
@@ -219,8 +247,9 @@ namespace InmobiliariaBase.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["Error"] = ex.Message;
+                TempData["Error"] = "Error de inicio de sesion";
                 return View();
+                return RedirectToAction(nameof(Index));
             }
         }
 

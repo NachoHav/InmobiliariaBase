@@ -19,8 +19,13 @@
                 <span asp-validation-for="Direccion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Tipo" class="control-label"></label>
-                <input asp-for="Tipo" class="form-control" />
+                <label class="control-label">Tipo</label>
+                <select class="form-control" name="Tipo">
+                    @foreach (var kvp in (IDictionary<int, string>)ViewBag.Tipos)
+                    {
+                        @:<option @(kvp.Key == Model.Tipo ? "selected" : "") value="@kvp.Key">@kvp.Value</option>
+                    }
+                </select>
                 <span asp-validation-for="Tipo" class="text-danger"></span>
             </div>
             <div class="form-group">

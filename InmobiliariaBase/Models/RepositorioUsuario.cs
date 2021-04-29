@@ -15,34 +15,29 @@ namespace InmobiliariaBase.Models
 
         }
 
-        public int Alta(Usuario usuario)
+        public int Alta(Usuario e)
         {
             int res = -1;
-
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"INSERT INTO Usuarios (Nombre, Apellido, Email, Clave, Avatar, Rol)" +
-                             $"VALUES (@nombre, @apellido, @email, @clave, @avatar, @rol)" +
-                             "SELECT SCOPE_IDENTITY();"; //devuelve el id insertado (LAST_INSERT_ID para mysql)
-
+                string sql = $"INSERT INTO Usuarios (Nombre, Apellido, Avatar, Email, Clave, Rol) " +
+                    $"VALUES (@nombre, @apellido, @avatar, @email, @clave, @rol);" +
+                    "SELECT SCOPE_IDENTITY();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@nombre", usuario.Nombre);
-                    command.Parameters.AddWithValue("@apellido", usuario.Apellido);
-                    command.Parameters.AddWithValue("@email", usuario.Email);
-                    command.Parameters.AddWithValue("@clave", usuario.Clave);
-                    if (String.IsNullOrEmpty(usuario.Avatar))
+                    command.Parameters.AddWithValue("@nombre", e.Nombre);
+                    command.Parameters.AddWithValue("@apellido", e.Apellido);
+                    if (String.IsNullOrEmpty(e.Avatar))
                         command.Parameters.AddWithValue("@avatar", "Sin Avatar");
                     else
-                        command.Parameters.AddWithValue("@avatar", usuario.Avatar);
-                    command.Parameters.AddWithValue("@rol", usuario.Rol);
-
+                        command.Parameters.AddWithValue("@avatar", e.Avatar);
+                    command.Parameters.AddWithValue("@email", e.Email);
+                    command.Parameters.AddWithValue("@clave", e.Clave);
+                    command.Parameters.AddWithValue("@rol", e.Rol);
                     connection.Open();
-
-                    res = Convert.ToInt32(command.ExecuteScalar()); // devuelve la primer columna de la primer fila de resultados del query (id)
-                    usuario.Id = res;
-
+                    res = Convert.ToInt32(command.ExecuteScalar());
+                    e.Id = res;
                     connection.Close();
                 }
             }
@@ -89,7 +84,7 @@ namespace InmobiliariaBase.Models
                     command.Parameters.AddWithValue("@rol", usuario.Rol);
 
                     if (String.IsNullOrEmpty(usuario.Avatar))
-                        command.Parameters.AddWithValue("@avatar", "Sin avatar");
+                        command.Parameters.AddWithValue("@avatar", "");
                     else
                         command.Parameters.AddWithValue("@avatar", usuario.Avatar);
 
@@ -103,32 +98,34 @@ namespace InmobiliariaBase.Models
             return res;
         }
 
-        public List<Usuario> ObtenerTodos()
-        {
-            List<Usuario> res = new List<Usuario>();
 
+
+        public IList<Usuario> ObtenerTodos()
+        {
+            IList<Usuario> res = new List<Usuario>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = "SELECT id, Email, Nombre, Apellido, Rol, Avatar FROM Usuarios WHERE Estado = 1;";
+                string sql = $"SELECT Id, Nombre, Apellido, Avatar, Email, Clave, Rol" +
+                    $" FROM Usuarios WHERE Estado = 1";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
                     connection.Open();
                     var reader = command.ExecuteReader();
-
                     while (reader.Read())
                     {
-                        Usuario usuario = new Usuario
+                        Usuario e = new Usuario
                         {
                             Id = reader.GetInt32(0),
-                            Email = reader.GetString(1),
-                            Nombre = reader.GetString(2),
-                            Apellido = reader.GetString(3),
-                            Rol = reader.GetInt32(4),
-                            Avatar = reader.GetString(5),
+                            Nombre = reader.GetString(1),
+                            Apellido = reader.GetString(2),
+                            Avatar = reader.GetString(3),
+                            Email = reader.GetString(4),
+                            Clave = reader.GetString(5),
+                            Rol = reader.GetInt32(6),
                         };
-                        res.Add(usuario);
+                        res.Add(e);
                     }
                     connection.Close();
                 }

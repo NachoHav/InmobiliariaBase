@@ -23,7 +23,7 @@ namespace InmobiliariaBase.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, Importe, PropietarioId," +
+                string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, Importe, PropietarioId, " +
                      " p.Nombre, p.Apellido" +
                      " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id WHERE i.Estado = 1 AND p.Estado = 1";
 
@@ -38,7 +38,7 @@ namespace InmobiliariaBase.Models
                         {
                             Id = reader.GetInt32(0),
                             Direccion = reader.GetString(1),
-                            Tipo = reader.GetString(2),
+                            Tipo = reader.GetInt32(2),
                             Ambientes = reader.GetInt32(3),
                             Superficie = reader.GetInt32(4),
                             Importe = reader.GetInt32(5),
@@ -110,7 +110,7 @@ namespace InmobiliariaBase.Models
                         {
                             Id = reader.GetInt32(0),
                             Direccion = reader.GetString(1),
-                            Tipo = reader.GetString(2),
+                            Tipo = reader.GetInt32(2),
                             Ambientes = reader.GetInt32(3),
                             Superficie = reader.GetInt32(4),
                             Importe = reader.GetInt32(5),
@@ -198,7 +198,66 @@ namespace InmobiliariaBase.Models
                         {
                             Id = reader.GetInt32(0),
                             Direccion = reader.GetString(1),
-                            Tipo = reader.GetString(2),
+                            Tipo = reader.GetInt32(2),
+                            Ambientes = reader.GetInt32(3),
+                            Superficie = reader.GetInt32(4),
+                            Importe = reader.GetInt32(5),
+                            PropietarioId = reader.GetInt32(6),
+
+                            Duenio = new Propietario
+                            {
+                                Id = reader.GetInt32(6),
+                                Nombre = reader.GetString(7),
+                                Apellido = reader.GetString(8),
+                            }
+
+                        };
+                        res.Add(i);
+                    }
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+        public List<Inmueble> ObtenerXFiltro(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            var res = new List<Inmueble>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, i.Importe, PropietarioId, " +
+                     " p.Nombre, p.Apellido" +
+                     " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id " +
+                     "INNER JOIN Contratos c ON c.InmuebleId = i.Id " +
+                     "WHERE i.Estado = 1 AND p.Estado = 1 AND i.Id IN " +
+                     "(SELECT InmuebleId  From Contratos " +
+                     "WHERE (FechaDesde > @fechaHasta OR FechaHasta < @fechaDesde))" +
+
+                     "UNION " +
+
+                     "SELECT i.Id, Direccion, Tipo, Ambientes, Superficie, i.Importe, PropietarioId, " +
+                     "p.Nombre, p.Apellido " +
+                     "FROM Inmuebles i " +
+                     "INNER JOIN Propietarios p ON i.PropietarioId = p.Id " +
+                     "WHERE i.Estado = 1 AND p.Estado = 1 AND  i.Id NOT IN " +
+                     "(SELECT InmuebleId FROM Contratos WHERE Estado = 1) ";
+        
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    command.Parameters.AddWithValue("@fechaDesde", fechaDesde);
+                    command.Parameters.AddWithValue("@fechaHasta", fechaHasta);
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Inmueble i = new Inmueble
+                        {
+                            Id = reader.GetInt32(0),
+                            Direccion = reader.GetString(1),
+                            Tipo = reader.GetInt32(2),
                             Ambientes = reader.GetInt32(3),
                             Superficie = reader.GetInt32(4),
                             Importe = reader.GetInt32(5),

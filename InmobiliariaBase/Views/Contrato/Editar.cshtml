@@ -24,16 +24,6 @@
                     <input asp-for="FechaHasta" class="form-control" />
                     <span asp-validation-for="FechaHasta" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Estado" class="control-label">Estado</label>
-
-                    <select class="form-control" name="Estado">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-
-                    <span asp-validation-for="Estado" class="text-danger"></span>
-                </div>
 
                 <div class="form-group">
                     <label class="control-label">Inmueble</label>
@@ -43,7 +33,7 @@
                             @:<option @(item.Id == Model.InmuebleId ? "selected" : "") value="@item.Id">@(item.Direccion + " " + item.Importe)</option>
                         }
                     </select>
-                    <span asp-validation-for="Id" class="text-danger"></span>
+                    <span asp-validation-for="InmuebleId" class="text-danger"></span>
                 </div>
 
 
@@ -55,11 +45,12 @@
                             @:<option @(item.Id == Model.InquilinoId ? "selected" : "") value="@item.Id">@(item.Nombre + " " + item.Apellido)</option>
                         }
                     </select>
-                    <span asp-validation-for="Id" class="text-danger"></span>
+                    <span asp-validation-for="InquilinoId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Guardar" class="btn btn-outline-dark" />
                 </div>
+            </div>  
         </form>
     </div>
 </div>

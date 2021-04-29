@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,6 +27,8 @@ namespace InmobiliariaBase.Controllers
         // GET: InmuebleController
         public ActionResult Index()
         {
+            ViewBag.Error = TempData["Error"];
+            ViewBag.Tipos = Inmueble.ObtenerTipos();
             var lista = repositorioInmueble.ObtenerTodos();
             return View(lista);
         }
@@ -39,6 +42,7 @@ namespace InmobiliariaBase.Controllers
         // GET: InmuebleController/Create
         public ActionResult Crear()
         {
+            ViewBag.Tipos = Inmueble.ObtenerTipos();
             ViewBag.Propietarios = repositorioPropietario.Obtener();
             return View();
         }
@@ -50,12 +54,15 @@ namespace InmobiliariaBase.Controllers
         {
             try
             {
-                repositorioInmueble.Alta(inmueble);                
+                ViewBag.Tipos = Inmueble.ObtenerTipos();
+                repositorioInmueble.Alta(inmueble);       
+                
                 return RedirectToAction(nameof(Index));                
             }
             catch
             {
-                return View();
+                TempData["Error"] = "Error, no se pudo crear el Inmueble.";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -63,6 +70,7 @@ namespace InmobiliariaBase.Controllers
         public ActionResult Editar(int id)
         {
             ViewBag.Propietarios = repositorioPropietario.Obtener();
+            ViewBag.Tipos = Inmueble.ObtenerTipos();
             var inmueble = repositorioInmueble.ObtenerInmueble(id);
             return View(inmueble);
         }
@@ -76,6 +84,7 @@ namespace InmobiliariaBase.Controllers
             {
                 inm.Id = id;
 
+
                 repositorioInmueble.Modificar(inm);
 
                 return RedirectToAction(nameof(Index));
@@ -83,7 +92,8 @@ namespace InmobiliariaBase.Controllers
             catch(Exception ex)
             {
 
-                return View(inm);
+                TempData["Error"] = "Error, no se pudo editar el Inmueble.";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -118,11 +128,30 @@ namespace InmobiliariaBase.Controllers
                 var lista = repositorioInmueble.ObtenerPorPropietario(id);
                 return View("Index", lista);
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
 
-                throw;
+                TempData["Error"] = "Error, no se pudo obtener el Inmueble.";
+                return RedirectToAction(nameof(Index));
             }
         }
+
+        public ActionResult ObtenerPorFiltro(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            try
+            {
+                var list = repositorioInmueble.ObtenerXFiltro(fechaDesde, fechaHasta);
+                return View("Index", list);
+            }
+            catch (SqlException ex)
+            {
+
+                TempData["Error"] = "Error, no se pudo obtener el Inmueble." +
+                    " Error en las fechas " + ex.Message.ToString();
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,8 +32,24 @@ namespace InmobiliariaBase.Controllers
         // GET: ContratoController
         public ActionResult Index()
         {
+            ViewBag.Error = TempData["Error"];
             var lista = repositorioContrato.ObtenerTodos();
-            return View(lista);
+            var list = new List<Contrato>();
+
+            foreach(var item in lista)
+            {
+                if(item.FechaHasta < DateTime.Now)
+                {
+                    repositorioContrato.Baja(item.Id);
+                }
+                else
+                {
+                    list.Add(item);
+                }
+            }
+
+
+            return View(list);
         }
 
         // GET: ContratoController/Details/5
@@ -56,12 +73,43 @@ namespace InmobiliariaBase.Controllers
         {
             try
             {
-                repositorioContrato.Alta(contrato);
-                return RedirectToAction(nameof(Index));
+                
+                if(contrato.FechaHasta > DateTime.Now && contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta && contrato.FechaDesde < contrato.FechaHasta)
+                {
+
+                    var lista = repositorioContrato.ObtenerTodos();                    
+                    var e = 1;
+
+                    foreach (var item in lista)
+                    {
+                        if (contrato.InmuebleId == item.InmuebleId && contrato.FechaDesde >= item.FechaDesde && contrato.FechaHasta <= item.FechaHasta)
+                        {
+                            e = 0;
+                        }
+                    }
+                    
+                    if(e == 1)
+                    {
+                        repositorioContrato.Alta(contrato);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Error, no se puede crear un contrato con esas fechas";
+                    }                   
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["Error"] = "Error, no se puede crear un contrato con esas fechas";
+                    return RedirectToAction(nameof(Index));
+                }
+                
             }
             catch (Exception ex)
             {
-                return View();
+                TempData["Error"] = "Error, no se pudo crear el contrato";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -77,17 +125,22 @@ namespace InmobiliariaBase.Controllers
         // POST: ContratoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Editar(int id, IFormCollection collection)
+        public ActionResult Editar(int id, Contrato c)
         {
             try
             {
-                var contrato = repositorioContrato.ObtenerContrato(id);
-                repositorioContrato.Modificar(contrato);
+                c.Id = id;
+
+                ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+
+                repositorioContrato.Modificar(c);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return View();
+                TempData["Error"] = "Error, no se pudo editar el contrato";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -126,7 +179,8 @@ namespace InmobiliariaBase.Controllers
             catch (Exception ex)
             {
 
-                throw;
+                TempData["Error"] = "Error, no se pudo obtener los contratos del inmueble";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -140,7 +194,8 @@ namespace InmobiliariaBase.Controllers
             catch (Exception ex)
             {
 
-                throw;
+                TempData["Error"] = "Error, no se pudo obtener los contratos vigentes";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -154,7 +209,8 @@ namespace InmobiliariaBase.Controllers
             catch (Exception ex)
             {
 
-                throw;
+                TempData["Error"] = "Error, no se pudo obtener las Bajas";
+                return RedirectToAction(nameof(Index));
             }        
         }
 
@@ -163,6 +219,66 @@ namespace InmobiliariaBase.Controllers
             repositorioContrato.Activar(id);           
             return RedirectToAction(nameof(Index));
         }
+
+
+
+        public ActionResult ObtenerPorFechas(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            try
+            {
+                if(fechaDesde < fechaHasta)
+                {
+                    var list = repositorioContrato.ObtenerXFechas(fechaDesde, fechaHasta);
+                    return View("Index", list);
+                }
+                else
+                {
+                    TempData["Error"] = "Error en las fechas, la fecha de Inicio debe ser menor que la fecha de Fin";
+                    return RedirectToAction(nameof(Index));
+                }
+                    
+            }
+            catch (SqlException ex)
+            {
+                TempData["Error"] = ex.Message.ToString();
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+
+  
+
+        public ActionResult Cancelar(int id)
+        {
+
+            var c = repositorioContrato.ObtenerContrato(id);
+            
+            var dias = c.FechaHasta - c.FechaDesde;
+            var mitad = dias / 2;
+            var diasRestantes = c.FechaHasta - DateTime.Now;
+            var monto = c.Importe;
+
+            if (mitad.Days > diasRestantes.Days)
+            {
+                ViewData["Multa"] = monto * 2;
+            }
+            else
+            {
+                ViewData["Multa"] = monto;
+            }
+
+            ViewData["Contrato"] = c;
+
+            return View("Cancelacion");    
+        }
+
+        public ActionResult Cancel(int id)
+        {
+            repositorioContrato.Cancelar(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+
 
     }
 }
