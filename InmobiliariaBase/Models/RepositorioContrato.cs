@@ -109,7 +109,7 @@ namespace InmobiliariaBase.Models
                     $"INNER JOIN Inquilinos i ON c.InquilinoId = i.Id AND i.Estado = 1 " +
                     $"INNER JOIN Inmuebles inm ON c.InmuebleId = inm.Id AND inm.Estado = 1 " +
 
-                    $" WHERE c.Id = @id AND c.Estado = 1";
+                    $" WHERE c.Id = @id";
 
                 //$"INNER JOIN Propietarios propietario ON inm.PropietarioId = propietario.Id AND propietario.Estado = 1" +
 
@@ -462,6 +462,26 @@ namespace InmobiliariaBase.Models
                 {
                     command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue("@id", id);
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+        public int Renovar(int id, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            int res = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $"UPDATE Contratos SET FechaDesde = @fechaDesde, FechaHasta = @fechaHasta, Estado = 1 WHERE Id = @id";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@fechaDesde", fechaDesde);
+                    command.Parameters.AddWithValue("@fechaHasta", fechaHasta);
                     connection.Open();
                     res = command.ExecuteNonQuery();
                     connection.Close();

@@ -74,7 +74,8 @@ namespace InmobiliariaBase.Controllers
             try
             {
                 
-                if(contrato.FechaHasta > DateTime.Now && contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta && contrato.FechaDesde < contrato.FechaHasta)
+                //if(contrato.FechaHasta > DateTime.Now && contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta && contrato.FechaDesde < contrato.FechaHasta)
+                if(contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta)
                 {
 
                     var lista = repositorioContrato.ObtenerTodos();                    
@@ -125,23 +126,60 @@ namespace InmobiliariaBase.Controllers
         // POST: ContratoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Editar(int id, Contrato c)
+        public ActionResult Editar(int id, Contrato contrato)
         {
             try
             {
-                c.Id = id;
+                if (contrato.FechaHasta > DateTime.Now && contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta && contrato.FechaDesde < contrato.FechaHasta)
+                {
 
-                ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
-                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                    var lista = repositorioContrato.ObtenerTodos();
+                    var e = 1;
 
-                repositorioContrato.Modificar(c);
-                return RedirectToAction(nameof(Index));
+                    foreach (var item in lista)
+                    {
+                        if (contrato.InmuebleId == item.InmuebleId && contrato.FechaDesde >= item.FechaDesde && contrato.FechaHasta <= item.FechaHasta)
+                        {
+                            e = 0;
+                        }
+                    }
+
+                    if (e == 1)
+                    {
+                        contrato.Id = id;
+
+                        ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                        ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+
+                        repositorioContrato.Modificar(contrato);
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Error, no se puede editar el contrato con esas fechas";
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["Error"] = "Error, no se puede editar el contrato con esas fechas";
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception ex)
             {
                 TempData["Error"] = "Error, no se pudo editar el contrato";
                 return RedirectToAction(nameof(Index));
             }
+
+
+            
+
+
+
+
+
         }
 
         // GET: ContratoController/Delete/5
@@ -279,6 +317,62 @@ namespace InmobiliariaBase.Controllers
         }
 
 
+
+        public ActionResult Renovar(int id)
+        {
+           
+            var contrato = repositorioContrato.ObtenerContrato(id);
+            
+            return View(contrato);
+        }
+
+        // POST: ContratoController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Renovar(Contrato contrato)
+        {
+            try
+            {
+
+                //if (contrato.FechaHasta > DateTime.Now && contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta && contrato.FechaDesde < contrato.FechaHasta)
+                if (contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta)
+                {
+
+                    var lista = repositorioContrato.ObtenerTodos();
+                    var e = 1;
+
+                    foreach (var item in lista)
+                    {
+                        if (contrato.InmuebleId == item.InmuebleId && contrato.FechaDesde >= item.FechaDesde && contrato.FechaHasta <= item.FechaHasta)
+                        {
+                            e = 0;
+                        }
+                    }
+
+                    if (e == 1)
+                    {
+                        repositorioContrato.Renovar(contrato.Id, contrato.FechaDesde, contrato.FechaHasta);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Error, no se puede renovar el contrato en esas fechas";
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["Error"] = "Error, no se puede renovar el contrato en esas fechas";
+                    return RedirectToAction(nameof(Index));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error, no se pudo renovar el contrato";
+                return RedirectToAction(nameof(Index));
+            }
+        }
 
     }
 }

@@ -9,15 +9,23 @@
 
 <div class="card mx-auto col-4 my-center bg-light d-flex align-items-center justify-content-center">
     <div class="card-body">
-        <h4 class="card-title">Cancelar Contrato @c.Id</h4>
+        <h4 class="card-title text-center">Cancelar Contrato @c.Id</h4>
         <p class="card-text text-center">
            @c.Inquilino.Nombre @c.Inquilino.Apellido debe pagar una multa de: @ViewData["Multa"] <br/>
             La fecha de finalización de contrato sobre el inmueble @c.InmuebleId - @c.Inmueble.Direccion será: @DateTime.Now            
         </p>
-        <a asp-action="Index" class="btn btn-outline-danger">
-            Volver
-        </a>
-        <button type="submit" class="btn btn-outline-dark"><i class="fas fa-search"></i> Confirmar</button>
+       
+        <div class="text-center">
+            <a asp-action="Index" class="btn btn-outline-danger text-center">
+                Volver
+            </a>
+            <form asp-action="Cancel">
+                <input type="hidden" name="Id" value="@c.Id" />
+                <button type="submit" class="btn btn-outline-dark"><i class="fas fa-search"></i> Confirmar</button>
+            </form>
+                   
+        </div>
+       
     </div>
 </div>
 
