@@ -7,12 +7,12 @@
     Contrato c =(Contrato)ViewBag.Contrato;
 }
 
-<h1>Crear</h1>
+<h1 class="text-center">Crear</h1>
 
-<h4>Pago</h4>
+<h4 class="text-center">Pago</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 mx-auto">
         <form asp-action="Crear">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" readonly asp-for="IdContrato" value="@c.Id" class="form-control" />
@@ -58,7 +58,7 @@
 </div>
 
 <div>
-    <a asp-action="ObtenerPorContrato" asp-route-id="@c.Id">Volver</a>
+    <a asp-action="ObtenerPorContrato" class="btn btn-outline-danger" asp-route-id="@c.Id">Volver</a>
 </div>
 
 @section Scripts {

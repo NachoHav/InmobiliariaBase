@@ -130,56 +130,27 @@ namespace InmobiliariaBase.Controllers
         {
             try
             {
-                if (contrato.FechaHasta > DateTime.Now && contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta && contrato.FechaDesde < contrato.FechaHasta)
+               if(contrato.FechaDesde < contrato.FechaHasta)
                 {
+                    contrato.Id = id;
 
-                    var lista = repositorioContrato.ObtenerTodos();
-                    var e = 1;
+                    ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                    ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
 
-                    foreach (var item in lista)
-                    {
-                        if (contrato.InmuebleId == item.InmuebleId && contrato.FechaDesde >= item.FechaDesde && contrato.FechaHasta <= item.FechaHasta)
-                        {
-                            e = 0;
-                        }
-                    }
-
-                    if (e == 1)
-                    {
-                        contrato.Id = id;
-
-                        ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
-                        ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
-
-                        repositorioContrato.Modificar(contrato);
-                        return RedirectToAction(nameof(Index));
-                    }
-                    else
-                    {
-                        TempData["Error"] = "Error, no se puede editar el contrato con esas fechas";
-                    }
-
+                    repositorioContrato.Modificar(contrato);
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     TempData["Error"] = "Error, no se puede editar el contrato con esas fechas";
                     return RedirectToAction(nameof(Index));
-                }
+                }                        
             }
             catch (Exception ex)
             {
                 TempData["Error"] = "Error, no se pudo editar el contrato";
                 return RedirectToAction(nameof(Index));
             }
-
-
-            
-
-
-
-
-
         }
 
         // GET: ContratoController/Delete/5
