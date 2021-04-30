@@ -72,9 +72,7 @@ namespace InmobiliariaBase.Controllers
         public ActionResult Crear(Contrato contrato)
         {
             try
-            {
-                
-                //if(contrato.FechaHasta > DateTime.Now && contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta && contrato.FechaDesde < contrato.FechaHasta)
+            {                               
                 if(contrato.FechaDesde >= DateTime.Now && contrato.FechaDesde < contrato.FechaHasta)
                 {
 
@@ -83,7 +81,7 @@ namespace InmobiliariaBase.Controllers
 
                     foreach (var item in lista)
                     {
-                        if (contrato.InmuebleId == item.InmuebleId && contrato.FechaDesde >= item.FechaDesde && contrato.FechaHasta <= item.FechaHasta)
+                        if (contrato.InmuebleId == item.InmuebleId && (contrato.FechaDesde >= item.FechaDesde) && (contrato.FechaHasta <= item.FechaHasta) || (contrato.FechaDesde <= item.FechaHasta) && (contrato.FechaHasta >= item.FechaDesde))
                         {
                             e = 0;
                         }
@@ -314,7 +312,8 @@ namespace InmobiliariaBase.Controllers
 
                     foreach (var item in lista)
                     {
-                        if (contrato.InmuebleId == item.InmuebleId && contrato.FechaDesde >= item.FechaDesde && contrato.FechaHasta <= item.FechaHasta)
+                        //if (contrato.InmuebleId == item.InmuebleId && contrato.FechaDesde >= item.FechaDesde && contrato.FechaHasta <= item.FechaHasta)
+                        if (contrato.InmuebleId == item.InmuebleId && (contrato.FechaDesde >= item.FechaDesde) && (contrato.FechaHasta <= item.FechaHasta) || (contrato.FechaDesde <= item.FechaHasta) && (contrato.FechaHasta >= item.FechaDesde))
                         {
                             e = 0;
                         }

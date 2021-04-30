@@ -17,7 +17,7 @@ namespace InmobiliariaBase.Models
         [Required, EmailAddress]
         public string Email { get; set; }
 
-        [DataType(DataType.Password)]
+        [Required, DataType(DataType.Password), StringLength(16, MinimumLength = 8, ErrorMessage = "La clave debe ser de 8 a 16 caracteres.")]
         public string Clave { get; set; } 
     }
 }

@@ -228,7 +228,7 @@ namespace InmobiliariaBase.Controllers
 
                 if (usuario == null || usuario.Clave != hashed)
                     {
-                        TempData["Error"] = "Error al iniciar sesión.";
+
                         return View();
                     }
 
@@ -249,7 +249,7 @@ namespace InmobiliariaBase.Controllers
             {
                 TempData["Error"] = "Error de inicio de sesion";
                 return View();
-                return RedirectToAction(nameof(Index));
+
             }
         }
 

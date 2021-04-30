@@ -30,11 +30,13 @@ namespace InmobiliariaBase.Models
         [Required]
         public int Rol { get; set; }
 
-        [Required, DataType(DataType.Password)]
+
+        [Required, DataType(DataType.Password), StringLength(16, MinimumLength = 8, ErrorMessage = "La clave debe ser de 8 a 16 caracteres.")]
         public string Clave { get; set; }
 
         public string Avatar { get; set; }
 
+        [Display(Name ="Avatar")]
         public IFormFile AvatarFile { get; set; }
         public bool Estado { get; set; }
 
