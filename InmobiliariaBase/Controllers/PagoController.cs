@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,10 +42,6 @@ namespace InmobiliariaBase.Controllers
         public ActionResult Crear(int id)
         {
 
-          
-            /*            ViewBag.ContratoId = id;*/
-          
-            //ViewData["Contrato"] = repositorioContrato.ObtenerContrato(id);
             ViewBag.Contrato = repositorioContrato.ObtenerContrato(id);
             return View();
         }
@@ -74,23 +71,35 @@ namespace InmobiliariaBase.Controllers
         }
 
         // GET: PagoController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Editar(int id)
         {
-            return View();
+            var pago = repositorioPago.ObtenerPago(id);
+            return View(pago);
         }
 
         // POST: PagoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Editar(int id, Pago pago)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                pago.Id = id;
+
+
+
+                repositorioPago.Modificar(pago);
+
+                var list = repositorioPago.ObtenerTodos(pago.IdContrato);
+                ViewBag.Contrato = repositorioContrato.ObtenerContrato(pago.IdContrato);
+                ViewBag.ContratoId = pago.IdContrato;
+
+                return View("Index", list);
             }
-            catch
+            catch(SqlException ex)
             {
-                return View();
+                TempData["Error"] = " Error, no se puede editar el pago";
+                return View("Index", "Contrato");
             }
         }
 

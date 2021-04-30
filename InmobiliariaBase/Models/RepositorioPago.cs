@@ -103,6 +103,41 @@ namespace InmobiliariaBase.Models
             return res;
         }
 
+        public Pago ObtenerPago(int id)
+        {
+            var pago = new Pago();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = "SELECT p.Id, ContratoId, FechaPago, p.Importe" +
+                     " FROM Pagos p " +
+                     "INNER JOIN Contratos c ON p.ContratoId = c.Id " +
+                     "INNER JOIN Inmuebles i ON c.InmuebleId = i.Id " +
+                     "INNER JOIN Inquilinos inq ON inq.Id = c.InquilinoId " +
+                     "WHERE p.id = @id AND p.Estado = 1 ";
+
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                    command.CommandType = CommandType.Text;
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        pago = new Pago
+                        {
+                            Id = reader.GetInt32(0),
+                            IdContrato = reader.GetInt32(1),
+                            FechaPago = reader.GetDateTime(2),
+                            Importe = reader.GetInt32(3),
+                        };
+                    }
+                    connection.Close();
+                }
+            }
+            return pago;
+        }
+
         public int Baja(int id)
         {
             int res = -1;
@@ -126,14 +161,14 @@ namespace InmobiliariaBase.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Pagos SET FechaPago=@fechaPago, ContratoId=@contratoId, Estado=@estado," +
+                string sql = $"UPDATE Pagos SET FechaPago=@fechaPago, ContratoId=@contratoId, Importe=@importe " +
                     $"WHERE Id = @id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue("@fechaPago", p.FechaPago);
-                    command.Parameters.AddWithValue("@apellido", p.IdContrato);
-                    command.Parameters.AddWithValue("@dni", p.Estado);
+                    command.Parameters.AddWithValue("@contratoId", p.IdContrato);
+                    command.Parameters.AddWithValue("@importe", p.Importe);
                     command.Parameters.AddWithValue("@id", p.Id);
                     connection.Open();
                     res = command.ExecuteNonQuery();

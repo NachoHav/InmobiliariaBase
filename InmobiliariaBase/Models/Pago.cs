@@ -22,5 +22,6 @@ namespace InmobiliariaBase.Models
         public bool Estado { get; set; }
 
         public int Importe { get; set; }
+
     }
 }
