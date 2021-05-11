@@ -79,13 +79,6 @@ namespace InmobiliariaBase.Controllers
                     var lista = repositorioContrato.ObtenerTodos();                    
                     var e = 1;
 
-                    foreach (var item in lista)
-                    {
-                        if (contrato.InmuebleId == item.InmuebleId && (contrato.FechaDesde >= item.FechaDesde) && (contrato.FechaHasta <= item.FechaHasta) || (contrato.FechaDesde <= item.FechaHasta) && (contrato.FechaHasta >= item.FechaDesde))
-                        {
-                            e = 0;
-                        }
-                    }
                     
                     if(e == 1)
                     {
